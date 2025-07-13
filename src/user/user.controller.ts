@@ -1,16 +1,26 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFile, UseInterceptors, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFile, UseInterceptors, BadRequestException, UploadedFiles } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { storage } from './oss';
 import * as path from 'path';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) { }
+
+
+  @Post('upload/large-file')
+  @UseInterceptors(FilesInterceptor('files', 20, {
+    dest: 'uploads',
+  }))
+  uploadLargeFile(@UploadedFiles() files: Array<Express.Multer.File>, @Body() body) {
+    console.log('upload file body |', body)
+    console.log('upload files |', files)
+  }
 
 
   // upload ava (file size, extense name...)

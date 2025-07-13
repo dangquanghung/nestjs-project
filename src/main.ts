@@ -10,6 +10,9 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule)
   app.useGlobalPipes(new ValidationPipe())
 
+  // enable cors
+  app.enableCors()
+
   app.useStaticAssets(join(__dirname, '../uploads'), {prefix: '/uploads'})
   await app.listen(3000);
 }

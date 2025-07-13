@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.9.0/axios.min.js"></script>
+</head>
+
+<body>
+  <h1>Upload Large File</h1>
+  <input id="fileInput" type="file" multiple />
+
+  <script>
+    
+    const inputFile = document.querySelector("#fileInput");
+
+    // change file
+    inputFile.onchange = async function () {
+      // multipart/FormData
+      const data = new FormData();
+      data.set("evtName", "upload file");
+      data.set("numFile", 20);
+
+      [...inputFile.files].forEach(file => {
+        data.append("files", file);
+      });
+
+      // call api
+      const rs = await axios.post("http://localhost:3000/user/upload/large-file", data);
+      console.log(">> rs >>", rs);
+    }
+  </script>
+</body>
+
+</html>
