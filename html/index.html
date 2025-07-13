@@ -13,23 +13,45 @@
   <input id="fileInput" type="file" multiple />
 
   <script>
-    
+
     const inputFile = document.querySelector("#fileInput");
+
+    // set chunk file
+    const chunkSize = 140 * 1024 // 140kb
+
 
     // change file
     inputFile.onchange = async function () {
-      // multipart/FormData
-      const data = new FormData();
-      data.set("evtName", "upload file");
-      data.set("numFile", 20);
 
-      [...inputFile.files].forEach(file => {
-        data.append("files", file);
-      });
+      const file = inputFile.files[0], chunks = []
+      let startPos = 0;
+      while (startPos < file.size) {
+        chunks.push(file.slice(startPos, startPos + chunkSize))
+        startPos += chunkSize;
+      }
+      if (!chunks.length) {
+        return
+      }
 
-      // call api
-      const rs = await axios.post("http://localhost:3000/user/upload/large-file", data);
-      console.log(">> rs >>", rs);
+      const fileNameRandom = Math.random().toString().slice(2, 7)
+      chunks.map((ck, index) => {
+
+        // multipart/FormData
+        const data = new FormData();
+        const nameFileFinal = fileNameRandom + '-' + file.name + '-' + index
+        data.set("name", nameFileFinal);
+        // data.set("numFile", 20);
+
+        // [...inputFile.files].forEach(file => {
+        //   data.append("files", file);
+        // });
+        data.append("files", ck);
+
+        // call api
+        const rs = axios.post("http://localhost:3000/user/upload/large-file", data);
+      })
+
+
     }
   </script>
 </body>
