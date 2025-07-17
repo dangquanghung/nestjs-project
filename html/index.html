@@ -29,11 +29,13 @@
         chunks.push(file.slice(startPos, startPos + chunkSize))
         startPos += chunkSize;
       }
+
       if (!chunks.length) {
         return
       }
 
       const fileNameRandom = Math.random().toString().slice(2, 7)
+      const chunkPromise = []
       chunks.map((ck, index) => {
 
         // multipart/FormData
@@ -48,10 +50,14 @@
         data.append("files", ck);
 
         // call api
-        const rs = axios.post("http://localhost:3000/user/upload/large-file", data);
+        chunkPromise.push(axios.post("http://localhost:3000/user/upload/large-file", data))
+        // const rs = axios.post("http://localhost:3000/user/upload/large-file", data);
       })
+      await Promise.all(chunkPromise)
+      // call api merge
+      const rs = await axios.get("http://localhost:3000/user/merge/file?file=chunks-" + fileNameRandom + '-' + file.name)
 
-
+      console.log("link FULL |", rs)
     }
   </script>
 </body>
