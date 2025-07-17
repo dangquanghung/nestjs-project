@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFile, UseInterceptors, BadRequestException, UploadedFiles, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFile, UseInterceptors, BadRequestException, UploadedFiles, Query, Res } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -8,6 +8,7 @@ import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { storage } from './oss';
 import * as path from 'path';
 import * as fs from 'fs'
+import { Response } from 'express';
 
 @Controller('user')
 export class UserController {
@@ -16,7 +17,7 @@ export class UserController {
 
   // merge file
   @Get('merge/file')
-  mergeFile(@Query("file") fileName: string) {
+  mergeFile(@Query("file") fileName: string, @Res() res: Response) {
     const nameDir = 'uploads/' + fileName
 
     //read
@@ -43,6 +44,10 @@ export class UserController {
       })
 
       startPos += fs.statSync(filePath).size
+    })
+
+    return res.json({
+      link: `http://localhost:3000/uploads/merge/${fileName}`
     })
   }
 
