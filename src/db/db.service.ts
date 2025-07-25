@@ -13,7 +13,6 @@ export class DbService {
 
         try {
             const filePath = this.options.path;
-            console.log("filePath", filePath);
             await access(filePath)
 
             const data = await readFile(filePath, {

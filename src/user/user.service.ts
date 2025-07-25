@@ -4,7 +4,6 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { User } from './entities/user.entity';
 import { DbService } from 'src/db/db.service';
-import { error } from 'console';
 import { LoginUserDto } from './dto/login-user.dto';
 
 @Injectable()

@@ -9,11 +9,18 @@ import { storage } from './oss';
 import * as path from 'path';
 import * as fs from 'fs'
 import { Response } from 'express';
+import { MyLogger } from 'src/logger/my.logger';
 
 @Controller('user')
 export class UserController {
+  private logger = new MyLogger()
   constructor(private readonly userService: UserService) { }
 
+
+  @Post('log')
+  log(@Body() body) {
+    console.log(body)
+  }
 
   // merge file
   @Get('merge/file')
@@ -110,7 +117,7 @@ export class UserController {
 
   @Post('new')
   register(@Body() registerUserDto: RegisterUserDto) {
-    console.log("register user", registerUserDto);
+    this.logger.log("registerUserDto |", registerUserDto.accountname);
     return this.userService.register(registerUserDto);
   }
   @Post()
