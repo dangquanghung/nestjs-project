@@ -1,0 +1,10 @@
+*.md
+!README.md
+*.txt
+node_modules/
+.git/
+.gitignore
+.prettierrc
+.vscode/
+.DS_Store
+.env
